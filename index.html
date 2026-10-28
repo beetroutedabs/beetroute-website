@@ -26,7 +26,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap">
 <script>
 (function () {
   var d = document.documentElement, t = (location.hash || "").slice(1).split("-");
@@ -690,7 +690,7 @@ h2.sub { margin: 52px 0 16px; font: 750 36px/1 var(--display); }
 <script>
 (() => {
   // Where clients send their answers and enquiries. Leave empty to say "your BEETROUTE contact".
-  const RETURN_EMAIL = "";
+  const RETURN_EMAIL = "beetrouted@gmail.com";
   const WHO = RETURN_EMAIL || "your BEETROUTE contact";
   // Particle look: 0 soft dust, 1 hard pixels, 2 tiny letters. A link ending #dust, #pixel or #glyph overrides it.
   const DEFAULT_STYLE = 0;
@@ -746,7 +746,9 @@ h2.sub { margin: 52px 0 16px; font: 750 36px/1 var(--display); }
   const STORE_KEY = "beetroute-starter-draft-v1", ENQ_KEY = "beetroute-enquiry-draft-v1";
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fine = window.matchMedia("(pointer: fine)").matches;
-  const narrow = () => innerWidth < 860;
+  let vwNow = innerWidth, vhNow = innerHeight, isNarrow = vwNow < 860;
+  window.addEventListener("resize", () => { vwNow = innerWidth; vhNow = innerHeight; isNarrow = vwNow < 860; });
+  const narrow = () => isNarrow;
   const LETTERS = "ABCDEFGHIJ";
   const html = document.documentElement;
   const $ = (id) => document.getElementById(id);
@@ -1173,18 +1175,26 @@ void main(){
     }[ROUTE];
     // built on first use (or when the browser is idle): measuring the path is the slowest part of startup
     let routeLUT = null, routeLUT0 = null, routeDirty = false;
+    // the path is sampled a slice at a time in idle moments, so building it never holds up a frame; ensureRoute() finishes it at once if it's needed sooner
+    const RD = 512, routeSamp = { pts: [], svg: null, path: null, L: 0 };
+    function sampleRoute(until) {
+      const s = routeSamp;
+      if (RV.fn) { while (s.pts.length < RD) s.pts.push(RV.fn(s.pts.length / (RD - 1))); return true; }
+      if (!s.path) {
+        s.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        s.path.setAttribute("d", RV.d);
+        s.svg.append(s.path); s.svg.style.position = "absolute"; s.svg.style.width = "0"; s.svg.style.height = "0"; document.body.append(s.svg);
+        s.L = s.path.getTotalLength();
+      }
+      while (s.pts.length < RD && performance.now() < until) { const q = s.path.getPointAtLength((s.pts.length / (RD - 1)) * s.L); s.pts.push([q.x, -q.y]); }
+      if (s.pts.length < RD) return false;
+      s.svg.remove();
+      return true;
+    }
     function ensureRoute() {
       if (routeLUT) return routeLUT;
-      const M = 1024, D = 512, pts = [];
-      if (RV.fn) for (let i = 0; i < D; i++) pts.push(RV.fn(i / (D - 1)));
-      else {
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"), path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("d", RV.d);
-        svg.append(path); svg.style.position = "absolute"; svg.style.width = "0"; svg.style.height = "0"; document.body.append(svg);
-        const L = path.getTotalLength();
-        for (let i = 0; i < D; i++) { const q = path.getPointAtLength((i / (D - 1)) * L); pts.push([q.x, -q.y]); }
-        svg.remove();
-      }
+      sampleRoute(Infinity);
+      const M = 1024, D = RD, pts = routeSamp.pts;
       const cum = [0];
       for (let i = 1; i < D; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
       let minx = 1e9, maxx = -1e9, miny = 1e9, maxy = -1e9;
@@ -1201,7 +1211,8 @@ void main(){
       routeLUT = lut; routeLUT0 = lut.slice(); routeDirty = true;
       return lut;
     }
-    (window.requestIdleCallback || ((f) => setTimeout(f, 1500)))(() => ensureRoute(), { timeout: 4000 });
+    const routeIdle = window.requestIdleCallback ? (f) => requestIdleCallback(f, { timeout: 4000 }) : (f) => setTimeout(() => f({ timeRemaining: () => 6 }), 200);
+    routeIdle(function step(d) { if (routeLUT) return; if (sampleRoute(performance.now() + Math.max(3, Math.min(8, d.timeRemaining())))) ensureRoute(); else routeIdle(step); });
     // a visitor-drawn route: points in scene units, smoothed and resampled into the same table
     function setRoutePts(pts) {
       ensureRoute();
@@ -1421,7 +1432,7 @@ void main(){
   let scene = "", mode = "light";
   const CHAPTERS = { play: "01 / 05 · Play", beet: "01 / 05 · Many small things", rings: "02 / 05 · Vivid within", services: "03 / 05 · Services", route: "04 / 05 · The route", dust: "04 / 05 · The route", pin: "05 / 05 · Say hello", word: "05 / 05 · Say hello" };
   // anchor and scale that make a shape of width boxW fill an element on screen
-  function elPlace(elm, boxW, boxH = 0) { const r = elm.getBoundingClientRect(), asp = innerHeight / innerWidth; return [[((r.left + r.width / 2) / innerWidth * 2 - 1) / asp, 1 - (r.top + r.height / 2) / innerHeight * 2], Math.min((2 * 0.94 * r.width) / (boxW * innerHeight), boxH ? (2 * 0.94 * r.height) / (boxH * innerHeight) : Infinity)]; }
+  function elPlace(elm, boxW, boxH = 0) { const r = elm.getBoundingClientRect(), asp = vhNow / vwNow; return [[((r.left + r.width / 2) / vwNow * 2 - 1) / asp, 1 - (r.top + r.height / 2) / vhNow * 2], Math.min((2 * 0.94 * r.width) / (boxW * vhNow), boxH ? (2 * 0.94 * r.height) / (boxH * vhNow) : Infinity)]; }
   const trackBox = (name) => (name === "faq" ? faqBox() : { beet: [1.5, 1.7], rings: [1.84, 1.84], pin: [1.2, 1.5], services: [2, 2] }[name] || [2.6]);
   // the element a scene's particles sit in (and scroll with), if any
   const trackOf = (name) => { const sc = SCENES[name]; return (sc && (sc.track || (narrow() && sc.trackN))) || null; };
@@ -1488,6 +1499,11 @@ void main(){
   };
   heroImg.onerror = () => document.body.classList.add("ready");
   heroImg.src = SAMPLE_IMG;
+  // build the particle shapes for later sections in idle moments after the opening, so scrolling never waits for one
+  const WARM = ["rings", "dust-far", "num:01", ...SVC.flatMap((s) => s.items.map(([, n]) => n)), "pin-light", "faq:?", "word-light", "num:13"];
+  const warmIdle = window.requestIdleCallback ? (f) => requestIdleCallback(f, { timeout: 3000 }) : (f) => setTimeout(f, 250);
+  const warmNext = () => { const n = WARM.shift(); if (!n) return; try { field.getShape(n); } catch (e) {} warmIdle(warmNext); };
+  if (field && document.fonts) document.fonts.ready.then(() => setTimeout(() => warmIdle(warmNext), 3500));
   setTimeout(() => document.body.classList.add("ready"), 2500);
 
   // ---- scroll controller
@@ -1567,6 +1583,10 @@ void main(){
   let playHudO = 1;
   const wordSpace = $("word-space");
   let ticking = false;
+  // where each section sits on the page only changes with the layout, so it's measured then (ResizeObserver), not on every scroll frame
+  let scrollNow = -1, secDirty = true;
+  const secPos = new Map();
+  const measureSecs = () => { const y0 = window.scrollY; [...secs, plainSec, servicesSec, routeSec].forEach((s) => { if (s) secPos.set(s, [s.getBoundingClientRect().top + y0, s.offsetHeight]); }); secDirty = !window.ResizeObserver; };
   let lastScrollY = window.scrollY, lastScrollT = performance.now();
   // scene changes wait for scrolling to settle on a section, so a fast scroll doesn't trigger every morph on the way
   let lastY = window.scrollY, pendingScene = null, pendingTimer = 0;
@@ -1579,24 +1599,25 @@ void main(){
   function update() {
     ticking = false;
     if (state.view !== "site") return;
-    const y = window.scrollY, vh = innerHeight;
+    if (secDirty) measureSecs();
+    const y = scrollNow >= 0 ? scrollNow : window.scrollY, vh = vhNow; scrollNow = -1;
     navWrap.classList.toggle("scrolled", y > 20);
     if (playHud && !playHud.contains(document.activeElement)) { const o = clamp(1 - (y - 20) / 130, 0, 1); if (o !== playHudO) { playHudO = o; playHud.style.opacity = o; playHud.style.visibility = o ? "" : "hidden"; } }
     // which section owns the viewport centre line
     // a section takes over when its top passes 58% of the screen on the way down, 42% on the way up
     const down = y >= lastY; lastY = y;
     let active = secs[0];
-    for (const s of secs) { if (s.getBoundingClientRect().top <= vh * (down ? 0.58 : 0.42)) active = s; }
+    for (const s of secs) { if (secPos.get(s)[0] - y <= vh * (down ? 0.58 : 0.42)) active = s; }
     const name = active.dataset.scene;
     requestScene(name);
     // scrubbed scenes
     if (name === "dissolve" && field) {
-      const r = plainSec.getBoundingClientRect(), total = plainSec.offsetHeight - vh;
-      field.setManualT(clamp((-r.top) / Math.max(1, total), 0, 1));
+      const [top, h] = secPos.get(plainSec), total = h - vh;
+      field.setManualT(clamp((y - top) / Math.max(1, total), 0, 1));
     }
     if (name === "services") {
-      const r = servicesSec.getBoundingClientRect(), total = servicesSec.offsetHeight - vh;
-      const p = clamp((-r.top) / Math.max(1, total), 0, 0.999);
+      const [top, h] = secPos.get(servicesSec), total = h - vh;
+      const p = clamp((y - top) / Math.max(1, total), 0, 0.999);
       const idx = Math.min(3, Math.floor(p * 4.4));
       if (idx !== svcIndex || !svcItems[idx].classList.contains("on")) {
         svcIndex = idx;
@@ -1606,8 +1627,8 @@ void main(){
       }
     }
     if (name === "route") {
-      const r = routeSec.getBoundingClientRect(), total = routeSec.offsetHeight - vh;
-      const p = clamp((-r.top) / Math.max(1, total), 0, 1);
+      const [top, h] = secPos.get(routeSec), total = h - vh;
+      const p = clamp((y - top) / Math.max(1, total), 0, 1);
       const idx = Math.min(5, Math.floor(p * 6.4));
       if (idx !== routeIndex) { routeIndex = idx; $("route-n").textContent = String(idx + 1).padStart(2, "0"); $("route-now").textContent = STOPS[idx][0]; stopEls.forEach((d, i) => d.classList.toggle("on", i <= idx)); }
       if (scene === "route") layoutStops();
@@ -1616,9 +1637,10 @@ void main(){
     const tr = trackOf(name);
     if (tr && field && scene === name) { const tp = trackPlace(name); field.retarget(tp[0], tp[1], true); }
   }
-  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); setTimeout(() => { if (ticking) update(); }, 120); } };
+  const onScroll = () => { scrollNow = window.scrollY; if (!ticking) { ticking = true; requestAnimationFrame(update); setTimeout(() => { if (ticking) update(); }, 120); } };
   window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", () => { onScroll(); if (scene === "route") layoutStops(); });
+  window.addEventListener("resize", () => { secDirty = true; onScroll(); if (scene === "route") layoutStops(); });
+  if (window.ResizeObserver) new ResizeObserver(() => { secDirty = true; onScroll(); }).observe(document.body);
 
   // ---- scramble headings when they enter
   const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789·/—";
