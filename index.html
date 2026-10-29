@@ -20,7 +20,7 @@
 <meta name="twitter:title" content="BEETROUTE · Quietly crafted websites">
 <meta name="twitter:description" content="BEETROUTE is a small studio for brands and websites. We make logos, design and build websites and write the words, for businesses that would rather be known for their work.">
 <meta name="twitter:image" content="https://thebeetroute.com/og.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"BEETROUTE","url":"https://thebeetroute.com/","logo":"https://thebeetroute.com/apple-touch-icon.png","slogan":"Quietly crafted websites."}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"BEETROUTE","url":"https://thebeetroute.com/","logo":"https://thebeetroute.com/apple-touch-icon.png","email":"beetrouted@gmail.com","slogan":"Quietly crafted websites."}</script>
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style>
 
 
@@ -325,6 +325,38 @@ html[data-opening="play"] .hero-hud .mono:first-child { visibility: hidden; }
 .liner-track .a { color: var(--accent); }
 .liner-track svg { width: .36em; height: .42em; fill: var(--accent); flex: none; }
 @keyframes mq { to { transform: translateX(-50%); } }
+/* studio: how we work */
+.about { list-style: none; margin: 30px 0 0; padding: 0; display: grid; gap: 14px; max-width: 52ch; }
+.about li { display: grid; grid-template-columns: 48px minmax(0, 1fr); }
+.about li span { font: 500 12px var(--mono); color: var(--label); letter-spacing: .12em; padding-top: 5px; }
+.within .about p { margin: 0; font-size: 17px; }
+/* work */
+.work { padding-block: clamp(80px, 12vw, 160px) clamp(60px, 8vw, 120px); }
+.work-lede { margin-top: 20px; }
+.cases { margin-top: clamp(40px, 6vw, 72px); display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); gap: 20px; align-items: stretch; }
+.case { position: relative; border: 1px solid var(--line); background: var(--panel); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: grid; align-content: start; transition: border-color .4s; }
+.case:hover { border-color: var(--line-strong); }
+.case::before, .case::after { content: ""; position: absolute; z-index: 1; width: 12px; height: 12px; border-color: var(--label); border-style: solid; }
+.case::before { left: -1px; top: -1px; border-width: 1px 0 0 1px; }
+.case::after { right: -1px; bottom: -1px; border-width: 0 1px 1px 0; }
+.case-img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; background: #EFE7DF; border-bottom: 1px solid var(--line); }
+.case-body { padding: clamp(22px, 3vw, 36px); display: grid; gap: 14px; }
+.case h3 { margin: 0; font: 800 clamp(34px, 3.6vw, 52px)/.95 var(--display); letter-spacing: -.04em; }
+.case p:not(.mono) { margin: 0; color: var(--muted); max-width: 52ch; }
+.case-facts { margin: 6px 0 0; display: grid; gap: 12px; }
+.case-facts div { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.case-facts dt { font: 500 12px/1.9 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--label); }
+.case-facts dd { margin: 0; }
+.case-tags { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.case-tags li { padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line-strong); font: 500 12px var(--mono); letter-spacing: .08em; }
+.case-open { border-style: dashed; border-color: var(--line-strong); grid-template-rows: minmax(0, 1fr) auto; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.case-slot { display: grid; place-items: center; min-height: 150px; border-bottom: 1px dashed var(--line); }
+.case-slot svg { width: 58px; height: 67px; opacity: .42; filter: grayscale(1); }
+.case-open .case-body { gap: 18px; }
+@media (max-width: 860px) { .cases { grid-template-columns: minmax(0, 1fr); } .case-facts div { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+.foot-bottom a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--line-strong); }
+.foot-bottom a:hover { color: var(--fg); border-color: var(--fg); }
+.foot-bottom a[href^="mailto:"] { text-transform: none; letter-spacing: .06em; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .foot .word-space { height: clamp(80px, 12vw, 180px); margin: 0 auto 36px; }
 /* ---------- extras: sound, draw, juice, hunt ---------- */
@@ -454,10 +486,10 @@ h2.sub { margin: 52px 0 16px; font: 750 36px/1 var(--display); }
 }
 /* phones and touch screens: no live blur over the moving particles (it re-renders every frame), slightly more solid surfaces instead */
 @media (max-width: 860px), (pointer: coarse) {
-  .nav-wrap.scrolled, .panel, .pill, .top-wrap { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .nav-wrap.scrolled, .panel, .pill, .top-wrap, .case { backdrop-filter: none; -webkit-backdrop-filter: none; }
   .nav-wrap.scrolled { background: color-mix(in srgb, var(--bg) 93%, transparent); }
   .top-wrap { background: color-mix(in srgb, var(--void) 93%, transparent); }
-  .panel, .pill { background: var(--panel-solid); }
+  .panel, .pill, .case:not(.case-open) { background: var(--panel-solid); }
 }
 </style>
 </head>
@@ -498,6 +530,7 @@ h2.sub { margin: 52px 0 16px; font: 750 36px/1 var(--display); }
       <div class="links">
         <a href="#within" data-scroll="within">Studio</a>
         <a href="#services" data-scroll="services">Services</a>
+        <a href="#work" data-scroll="work">Work</a>
         <a href="#route" data-scroll="route">Route</a>
         <a href="#faq" data-scroll="faq">FAQ</a>
         <a href="#enquire" data-scroll="enquire">Enquire</a>
@@ -508,8 +541,8 @@ h2.sub { margin: 52px 0 16px; font: 750 36px/1 var(--display); }
   </div>
 
   <main>
-    <section class="play" data-scene="play" data-mode="light" aria-label="BEETROUTE web design studio">
-      <p class="sr">BEETROUTE, a web design studio. The beetroot logo is made of particles you can play with.</p>
+    <section class="play" data-scene="play" data-mode="light" aria-label="BEETROUTE brand and web studio">
+      <p class="sr">BEETROUTE, a brand and web studio. The beetroot logo is made of particles you can play with.</p>
       <div class="play-hud">
         <form class="play-name" id="play-name" hidden>
           <label for="play-input" class="sr">Your business name</label>
@@ -523,7 +556,7 @@ h2.sub { margin: 52px 0 16px; font: 750 36px/1 var(--display); }
     <header class="hero gutter" id="top" data-scene="beet" data-mode="light">
       <div class="wrap hero-grid">
         <div>
-          <p class="mono rise" style="margin-bottom:18px">Web design studio</p>
+          <p class="mono rise" style="margin-bottom:18px">Brand and web studio</p>
           <h1 class="h xl">Made of <em>many</em> small things.</h1>
           <p class="lede rise">A website is ten thousand small decisions. We make every one of them quietly, so your work is what people notice.</p>
           <div class="ctas rise">
@@ -541,7 +574,12 @@ h2.sub { margin: 52px 0 16px; font: 750 36px/1 var(--display); }
         <div>
           <p class="mono" style="margin-bottom:16px">Inside</p>
           <h2 class="h lg reveal" id="within-title">Vivid within.</h2>
-          <p>Cut a beetroot open and it's all rings and colour. We're a small web design studio built the same way: <b>calm on the surface, carefully made underneath.</b><button type="button" class="hb" data-hb="0" aria-label="Hidden beet" hidden><svg viewBox="0 0 100 116" aria-hidden="true"><use href="#mark"/></svg></button></p>
+          <p>Cut a beetroot open and it's all rings and colour. We're a small brand and web studio built the same way: <b>calm on the surface, carefully made underneath.</b><button type="button" class="hb" data-hb="0" aria-label="Hidden beet" hidden><svg viewBox="0 0 100 116" aria-hidden="true"><use href="#mark"/></svg></button></p>
+          <ul class="about" aria-label="How we work">
+            <li><span>01</span><p><b>You talk to the people doing the work.</b> No account managers, no hand-offs.</p></li>
+            <li><span>02</span><p><b>One small team, logo to launch.</b> Brand, design, build and words under one roof, so it all fits together.</p></li>
+            <li><span>03</span><p><b>A few projects at a time.</b> Yours gets our full attention, not a slot in a queue.</p></li>
+          </ul>
         </div>
         <div class="field-space" id="rings-space" aria-hidden="true"></div>
       </div>
@@ -560,6 +598,38 @@ h2.sub { margin: 52px 0 16px; font: 750 36px/1 var(--display); }
             </div>
           </div>
           <div class="field-space" id="svc-space" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="work gutter" id="work" data-scene="dust" data-mode="dark" aria-labelledby="work-title">
+      <div class="wrap">
+        <p class="mono" style="margin-bottom:16px">Work</p>
+        <h2 class="h lg reveal" id="work-title">First harvest.</h2>
+        <p class="lede work-lede">We're a new studio, so our first project was us. Here's what we made, and room for yours.</p>
+        <div class="cases">
+          <article class="case" aria-labelledby="case-1">
+            <img class="case-img" src="work-beetroute-1600.webp" srcset="work-beetroute-800.webp 800w, work-beetroute-1600.webp 1600w" sizes="(max-width: 860px) 100vw, 62vw" width="1600" height="1000" loading="lazy" decoding="async" alt="The BEETROUTE beetroot pin in 3D clay, beside two phones showing this website, and the brand colours.">
+            <div class="case-body">
+              <p class="mono">01 · Our own studio · 2026</p>
+              <h3 id="case-1">BEETROUTE</h3>
+              <p>A beetroot that doubles as a map pin, for a studio that helps people find you. We made the brand first, then the site you're on.</p>
+              <dl class="case-facts">
+                <div><dt>We made</dt><dd>The Soft Clay logo in 2D and 3D, colours and type, a brand guide, this website and a social media kit.</dd></div>
+                <div><dt>Built for</dt><dd>Phones first, tuned until scrolling stayed smooth on a slowed-down phone.</dd></div>
+              </dl>
+              <ul class="case-tags" aria-label="Services used"><li>Brand</li><li>Design</li><li>Build</li><li>Words</li></ul>
+            </div>
+          </article>
+          <article class="case case-open" aria-labelledby="case-2">
+            <div class="case-slot" aria-hidden="true"><svg viewBox="0 0 100 116"><use href="#mark"/></svg></div>
+            <div class="case-body">
+              <p class="mono">02 · Next</p>
+              <h3 id="case-2">Your business here.</h3>
+              <p>We're taking on our first client projects now. Only a few at a time, so each one gets our full attention.</p>
+              <div class="row-actions"><button type="button" class="btn primary" data-open-flow>Start a project <span class="arrow" aria-hidden="true">→</span></button></div>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -631,8 +701,8 @@ h2.sub { margin: 52px 0 16px; font: 750 36px/1 var(--display); }
             <div class="field"><label for="enq-message">Message</label><textarea id="enq-message" name="message" rows="3" placeholder="A little about your business and what you'd like to change"></textarea><span class="bar"></span></div>
             <p class="error" id="enq-error" role="alert"></p>
             <div class="form-foot">
-              <button type="submit" class="btn primary">Prepare my enquiry <span class="arrow" aria-hidden="true">→</span></button>
-              <span class="small">Next you'll copy it and send it to us by email.</span>
+              <button type="submit" class="btn primary">Send my enquiry <span class="arrow" aria-hidden="true">→</span></button>
+              <span class="small">It opens in your email app, ready to send.</span>
             </div>
           </form>
           <div class="thanks" id="enquiry-thanks" hidden></div>
@@ -648,10 +718,10 @@ h2.sub { margin: 52px 0 16px; font: 750 36px/1 var(--display); }
         <div>
           <p class="tag">Quietly crafted websites.<button type="button" class="hb" data-hb="4" aria-label="Hidden beet" hidden><svg viewBox="0 0 100 116" aria-hidden="true"><use href="#mark"/></svg></button></p>
         </div>
-        <nav aria-label="Footer"><a href="#within" data-scroll="within">Studio</a><a href="#services" data-scroll="services">Services</a><a href="#route" data-scroll="route">Route</a><a href="#faq" data-scroll="faq">FAQ</a><a href="#enquire" data-scroll="enquire">Enquire</a></nav>
+        <nav aria-label="Footer"><a href="#within" data-scroll="within">Studio</a><a href="#services" data-scroll="services">Services</a><a href="#work" data-scroll="work">Work</a><a href="#route" data-scroll="route">Route</a><a href="#faq" data-scroll="faq">FAQ</a><a href="#enquire" data-scroll="enquire">Enquire</a></nav>
         <div class="row-actions"><button type="button" class="btn primary" data-open-flow>Start a project</button></div>
       </div>
-      <div class="foot-bottom"><p class="mono" id="foot-contact">Questions? Use the enquiry form.</p><button type="button" class="foot-drop" id="foot-drop" hidden>Don't press this</button><button type="button" class="foot-drop" id="hunt-count" hidden></button><p class="mono">© 2026 BEETROUTE</p></div>
+      <div class="foot-bottom"><p class="mono" id="foot-contact"><a href="mailto:beetrouted@gmail.com">beetrouted@gmail.com</a></p><button type="button" class="foot-drop" id="foot-drop" hidden>Don't press this</button><button type="button" class="foot-drop" id="hunt-count" hidden></button><p class="mono"><a href="/privacy.html">Privacy</a><span aria-hidden="true">&nbsp; · &nbsp;</span>© 2026 BEETROUTE</p></div>
     </div>
   </footer>
 </div>
@@ -2058,15 +2128,35 @@ void main(){
   function words(h, text) { text.split(" ").forEach((w, i) => { if (i) h.append(" "); const s = el("span", "w", w); s.style.setProperty("--i", i); h.append(s); }); }
   const today = () => new Date().toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
   const downloads = (async () => { try { return window.claude && typeof window.claude.use === "function" ? await window.claude.use("downloads") : null; } catch { return null; } })();
-  function handback(container, { textFn, filenameFn, copyLabel, downloadLabel }) {
+  // Send opens the visitor's own email app with everything written in. Very long answers go on the clipboard instead, since some mail apps cut long links short.
+  const MAIL_MAX = 6000;
+  function handback(container, { textFn, filenameFn, copyLabel, downloadLabel, mailLabel, subjectFn }) {
     const row = el("div", "row-actions");
-    const copy = el("button", "btn primary", copyLabel); copy.type = "button";
-    const dl = el("button", "btn", downloadLabel); dl.type = "button"; dl.hidden = true;
-    row.append(copy, dl);
     const status = el("p", "status"); status.setAttribute("role", "status");
     const plain = el("details", "plain-text"); plain.append(el("summary", null, "Show as plain text"));
     const pre = el("pre"); pre.textContent = textFn(); plain.append(pre);
     const say = (t) => { status.textContent = t; };
+    const mailing = !!(RETURN_EMAIL && mailLabel);
+    if (mailing) {
+      const mail = el("a", "btn primary send-mail", mailLabel + " "); const ar = el("span", "arrow", "→"); ar.setAttribute("aria-hidden", "true"); mail.append(ar);
+      const compose = () => {
+        const text = textFn(), long = encodeURIComponent(text).length > MAIL_MAX;
+        const body = (long ? "My answers are copied. Paste them here, then press send.\n\n" : text).replace(/\r?\n/g, "\r\n");
+        mail.href = `mailto:${RETURN_EMAIL}?subject=${encodeURIComponent(subjectFn())}&body=${encodeURIComponent(body)}`;
+        return [text, long];
+      };
+      compose();
+      mail.addEventListener("click", () => {
+        const [text, long] = compose(); pre.textContent = text;
+        const pasteIt = "Opening your email app. Copy your answers below and paste them into the email.";
+        if (long) { try { navigator.clipboard.writeText(text).then(() => say("Opening your email app. Your answers are copied: paste them into the email, then press send."), () => say(pasteIt)); } catch { say(pasteIt); } }
+        else say("Opening your email app.");
+      });
+      row.append(mail);
+    }
+    const copy = el("button", mailing ? "btn" : "btn primary", copyLabel); copy.type = "button";
+    const dl = el("button", "btn", downloadLabel); dl.type = "button"; dl.hidden = true;
+    row.append(copy, dl);
     if (RETURN_EMAIL) { const ce = el("button", "btn quiet", "Copy email address"); ce.type = "button"; ce.addEventListener("click", () => { try { navigator.clipboard.writeText(RETURN_EMAIL).then(() => say("Email address copied."), () => say("Select the address to copy it.")); } catch { say("Select the address to copy it."); } }); row.append(ce); }
     copy.addEventListener("click", () => {
       const text = textFn(); pre.textContent = text;
@@ -2145,15 +2235,17 @@ void main(){
     else if (!(q.message || "").trim()) bad = ["Please add a short message.", "enq-message"];
     if (bad) { enqErr.textContent = bad[0]; enqErr.classList.remove("show"); void enqErr.offsetWidth; enqErr.classList.add("show"); $(bad[1]).focus(); return; }
     enqErr.textContent = ""; showThanks();
+    // the submit tap opens the email app straight away; the Send button stays for a second try
+    const mail = thanks.querySelector(".send-mail"); if (mail) mail.click();
   });
   function showThanks() {
     thanks.textContent = "";
     const pin = document.createElementNS("http://www.w3.org/2000/svg", "svg"); pin.setAttribute("viewBox", "0 0 100 116"); pin.setAttribute("class", "landing"); pin.setAttribute("aria-hidden", "true"); pin.innerHTML = '<use href="#mark"/>';
     const first = ((state.enquiry.name || "").trim().split(/\s+/)[0]) || "";
     const h = el("h3", null, `Thank you${first ? ", " + first : ""}. Your enquiry is ready to send.`);
-    const p = el("p"); p.append("It isn't sent automatically. Copy it and paste it into an email to "); if (RETURN_EMAIL) p.append(el("span", "addr", RETURN_EMAIL)); else p.append(WHO); p.append(", or download it and attach the file.");
+    const p = el("p"); p.append("Your email app opens with it all written in, addressed to "); if (RETURN_EMAIL) p.append(el("span", "addr", RETURN_EMAIL)); else p.append(WHO); p.append(". Press send there and it's with us. If it didn't open, tap Send by email again, or copy it instead.");
     thanks.append(pin, h, p);
-    handback(thanks, { textFn: enquiryText, filenameFn: () => `BEETROUTE enquiry - ${safeName(state.enquiry.name, "enquiry")}.txt`, copyLabel: "Copy my enquiry", downloadLabel: "Download my enquiry" });
+    handback(thanks, { textFn: enquiryText, filenameFn: () => `BEETROUTE enquiry - ${safeName(state.enquiry.name, "enquiry")}.txt`, copyLabel: "Copy my enquiry", downloadLabel: "Download my enquiry", mailLabel: "Send by email", subjectFn: () => { const q = state.enquiry; return "Enquiry from " + ((q.name || "").trim() || "the website") + ((q.business || "").trim() ? " · " + q.business.trim() : ""); } });
     const more = el("div", "row-actions");
     const edit = el("button", "btn quiet", "Edit my enquiry"); edit.type = "button"; edit.addEventListener("click", () => { thanks.hidden = true; form.hidden = false; $("enq-name").focus(); });
     const start = el("button", "btn", "Start the Project Starter too"); start.type = "button"; start.setAttribute("data-open-flow", "");
@@ -2250,9 +2342,9 @@ void main(){
     const first = (((state.answers.details || {}).name || "").trim().split(/\s+/)[0]) || "";
     const h = el("h1", "q"); words(h, `Thank you${first ? ", " + first : ""}. Your answers are ready to send.`); s.append(h);
     const send = el("div", "send"); const intro = el("p", "who");
-    intro.append("Your answers aren't sent automatically. Copy them and paste them into an email to "); if (RETURN_EMAIL) intro.append(el("span", "addr", RETURN_EMAIL)); else intro.append(WHO); intro.append(", or download them and attach the file.");
+    intro.append("Tap Send to open your email app with your answers written in, addressed to "); if (RETURN_EMAIL) intro.append(el("span", "addr", RETURN_EMAIL)); else intro.append(WHO); intro.append(". Then press send there. You can also copy them instead.");
     send.append(intro);
-    handback(send, { textFn: plainText, filenameFn: () => `BEETROUTE Project Starter - ${safeName(state.answers.business, "answers")}.txt`, copyLabel: "Copy my answers", downloadLabel: "Download my answers" });
+    handback(send, { textFn: plainText, filenameFn: () => `BEETROUTE Project Starter - ${safeName(state.answers.business, "answers")}.txt`, copyLabel: "Copy my answers", downloadLabel: "Download my answers", mailLabel: "Send my answers", subjectFn: () => "Project Starter · " + ((state.answers.business || "").trim() || (((state.answers.details || {}).name) || "").trim() || "my answers") });
     s.append(send, el("h2", "sub", "Your answers"));
     const ol = el("ol", "review");
     QUESTIONS.forEach((q, i) => { const li = el("li"); li.style.setProperty("--i", i); li.append(el("span", "n", String(i + 1).padStart(2, "0")), el("span", "rq", q.label)); const t = answerText(q); li.append(el("span", "ra" + (t ? "" : " empty"), t || "No answer")); const e = el("button", "btn quiet edit", "Edit"); e.type = "button"; e.setAttribute("aria-label", `Edit question ${i + 1}: ${q.label}`); e.addEventListener("click", () => { state.returnToSummary = true; go(i, -1); }); li.append(e); ol.append(li); });
