@@ -115,7 +115,7 @@ a { color: inherit; }
 
 /* ---------- nav ---------- */
 .nav-wrap { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; right: 0; z-index: 40; padding-block: 18px; transition: padding .4s var(--ease), background .4s; }
-.nav-wrap.scrolled { padding-block: 12px; background: color-mix(in srgb, var(--bg) 70%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.nav-wrap.scrolled { padding-block: 12px; background: color-mix(in srgb, var(--bg) 70%, transparent); }
 html[data-mode="dark"] .nav-wrap.scrolled { background: color-mix(in srgb, var(--void) 70%, transparent); }
 .nav { display: flex; align-items: center; gap: 28px; }
 .nav .links { display: flex; gap: 28px; margin-left: auto; }
@@ -154,7 +154,7 @@ body.ready .hero .rise { opacity: 1; transform: none; transition: opacity 1s var
 .within p { color: var(--muted); max-width: 48ch; margin: 22px 0 0; font-size: 19px; }
 .within p b { color: var(--fg); font-weight: 500; }
 .specimens { margin-top: clamp(56px, 8vw, 110px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-.spec { position: relative; border: 1px solid var(--line); padding: 18px; display: grid; gap: 14px; background: var(--panel); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: border-color .4s; }
+.spec { position: relative; border: 1px solid var(--line); padding: 18px; display: grid; gap: 14px; background: var(--panel); transition: border-color .4s; }
 .spec:hover { border-color: var(--line-strong); }
 .spec::before, .spec::after { content: ""; position: absolute; width: 10px; height: 10px; border-color: var(--label); border-style: solid; }
 .spec::before { left: -1px; top: -1px; border-width: 1px 0 0 1px; }
@@ -235,7 +235,7 @@ html[data-route="road"] .stop:not(.side) { width: 230px; }
 .enquire .after li span { font: 500 12px var(--mono); color: var(--label); letter-spacing: .12em; padding-top: 5px; }
 .enquire .pin-space { min-height: 34vh; }
 @media (max-width: 860px) { .enquire { grid-template-columns: minmax(0, 1fr); } .enquire .pin-space { min-height: 26vh; } }
-.panel { position: relative; border: 1px solid var(--line); padding: clamp(22px, 4vw, 40px); background: var(--panel); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.panel { position: relative; border: 1px solid var(--line); padding: clamp(22px, 4vw, 40px); background: var(--panel); }
 .panel::before, .panel::after { content: ""; position: absolute; width: 12px; height: 12px; border-color: var(--label); border-style: solid; }
 .panel::before { left: -1px; top: -1px; border-width: 1px 0 0 1px; }
 .panel::after { right: -1px; bottom: -1px; border-width: 0 1px 1px 0; }
@@ -334,7 +334,7 @@ html[data-opening="play"] .hero-hud .mono:first-child { visibility: hidden; }
 .work { padding-block: clamp(80px, 12vw, 160px) clamp(60px, 8vw, 120px); }
 .work-lede { margin-top: 20px; }
 .cases { margin-top: clamp(40px, 6vw, 72px); display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); gap: 20px; align-items: stretch; }
-.case { position: relative; border: 1px solid var(--line); background: var(--panel); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: grid; align-content: start; transition: border-color .4s; }
+.case { position: relative; border: 1px solid var(--line); background: var(--panel); display: grid; align-content: start; transition: border-color .4s; }
 .case:hover { border-color: var(--line-strong); }
 .case::before, .case::after { content: ""; position: absolute; z-index: 1; width: 12px; height: 12px; border-color: var(--label); border-style: solid; }
 .case::before { left: -1px; top: -1px; border-width: 1px 0 0 1px; }
@@ -349,7 +349,7 @@ html[data-opening="play"] .hero-hud .mono:first-child { visibility: hidden; }
 .case-facts dd { margin: 0; }
 .case-tags { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .case-tags li { padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line-strong); font: 500 12px var(--mono); letter-spacing: .08em; }
-.case-open { border-style: dashed; border-color: var(--line-strong); grid-template-rows: minmax(0, 1fr) auto; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.case-open { border-style: dashed; border-color: var(--line-strong); grid-template-rows: minmax(0, 1fr) auto; background: transparent; }
 .case-slot { display: grid; place-items: center; min-height: 150px; border-bottom: 1px dashed var(--line); }
 .case-slot svg { width: 58px; height: 67px; opacity: .42; filter: grayscale(1); }
 .case-open .case-body { gap: 18px; }
@@ -393,7 +393,7 @@ html[data-mode="dark"] #juice { mix-blend-mode: screen; }
 .faq { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(28px, 5vw, 72px); align-items: start; }
 .faq-lede { margin-top: 18px; }
 .faq-area { position: relative; margin-top: 30px; height: var(--area-h, 360px); }
-.pill { position: absolute; left: 0; top: 0; max-width: 260px; padding: 13px 18px; border-radius: 16px; border: 1px solid var(--line-strong); background: var(--panel); color: var(--fg); font: 600 16px/1.3 var(--body); text-align: left; cursor: grab; user-select: none; -webkit-user-select: none; touch-action: manipulation; will-change: transform; transition: background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease), box-shadow .25s var(--ease); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.pill { position: absolute; left: 0; top: 0; max-width: 260px; padding: 13px 18px; border-radius: 16px; border: 1px solid var(--line-strong); background: var(--panel); color: var(--fg); font: 600 16px/1.3 var(--body); text-align: left; cursor: grab; user-select: none; -webkit-user-select: none; touch-action: manipulation; will-change: transform; transition: background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease), box-shadow .25s var(--ease); }
 .pill:hover { border-color: var(--fg); }
 .pill.dragging { cursor: grabbing; z-index: 3; box-shadow: 0 22px 40px -14px rgba(0, 0, 0, .7); }
 .pill[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg); border-color: transparent; }
@@ -420,7 +420,7 @@ html[data-mode="dark"] #juice { mix-blend-mode: screen; }
 @media (max-width: 860px) { .faq { grid-template-columns: minmax(0, 1fr); } .faq-space { height: 150px; } .faq-card { min-height: 0; } .pill { font-size: 14px; padding: 10px 14px; max-width: 200px; border-radius: 14px; } }
 /* ---------- questionnaire ---------- */
 #flow { position: relative; z-index: 2; min-height: 100svh; }
-.top-wrap { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; padding-block: 16px 14px; background: color-mix(in srgb, var(--void) 70%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.top-wrap { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; padding-block: 16px 14px; background: color-mix(in srgb, var(--void) 70%, transparent); }
 .top { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
 .count { margin-left: auto; font: 500 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-variant-numeric: tabular-nums; }
 .count b { color: var(--accent); font-weight: 500; }
@@ -484,13 +484,12 @@ h2.sub { margin: 52px 0 16px; font: 750 36px/1 var(--display); }
   .scrub .w { opacity: 1; }
   body .hero .h, body .hero .rise { opacity: 1; transform: none; }
 }
-/* phones and touch screens: no live blur over the moving particles (it re-renders every frame), slightly more solid surfaces instead */
-@media (max-width: 860px), (pointer: coarse) {
-  .nav-wrap.scrolled, .panel, .pill, .top-wrap, .case { backdrop-filter: none; -webkit-backdrop-filter: none; }
-  .nav-wrap.scrolled { background: color-mix(in srgb, var(--bg) 93%, transparent); }
-  .top-wrap { background: color-mix(in srgb, var(--void) 93%, transparent); }
-  .panel, .pill, .case:not(.case-open) { background: var(--panel-solid); }
-}
+/* no live blur over the moving particles (it re-renders every frame), slightly more solid surfaces instead */
+.nav-wrap.scrolled { background: color-mix(in srgb, var(--bg) 93%, transparent); }
+.top-wrap { background: color-mix(in srgb, var(--void) 93%, transparent); }
+.panel, .pill, .case:not(.case-open) { background: var(--panel-solid); }
+/* slow-device mode (set by the particle engine) */
+html[data-perf="low"] .play-name input { backdrop-filter: none; -webkit-backdrop-filter: none; }
 </style>
 </head>
 <body>
@@ -1385,10 +1384,25 @@ void main(){
       P.aspect = cv.height / cv.width;
       gl.viewport(0, 0, cv.width, cv.height);
     };
-    window.addEventListener("resize", resize); resize();
-    let last = 0, ema = 16, slowFrames = 0, drawN = N;
+    let resizeT = 0;
+    window.addEventListener("resize", () => { clearTimeout(resizeT); if (Math.round(innerWidth * P.dpr) !== cv.width) resize(); else resizeT = setTimeout(resize, 180); });
+    resize();
+    let last = 0, drawN = N, level = 0, sampleFrom = performance.now() + 600;
+    const win = [];
+    // slow device: 1 drops to 1x pixels and turns off the ink cursor, 2 and 3 draw fewer (slightly bigger) particles, down to 40%
+    function setLevel(l) {
+      level = l;
+      if (l >= 1) { html.dataset.perf = "low"; if (P.dpr > 1) { P.dprCap = 1; resize(); } }
+      if (l >= 2) { drawN = Math.round(N * (l === 2 ? 0.6 : 0.4)); P.sizeK = Math.pow(N / drawN, 0.3); }
+      window.__bt.quality = [P.dpr, drawN];
+    }
+    // some devices say up front that they'll struggle: software graphics, or a low-memory phone
+    const gpuInfo = gl.getExtension("WEBGL_debug_renderer_info");
+    if (gpuInfo && /swiftshader|llvmpipe|software|basic render/i.test(gl.getParameter(gpuInfo.UNMASKED_RENDERER_WEBGL) || "")) setLevel(2);
+    else if (navigator.deviceMemory && navigator.deviceMemory <= 4) setLevel(1);
     function frame(now) {
-      const dt = last ? Math.min(50, now - last) : 16; last = now;
+      const raw = last ? now - last : 0;
+      const dt = last ? Math.min(50, raw) : 16; last = now;
       if (!P.manual) P.t = reduce ? 1 : clamp((now - P.t0) / P.dur, 0, 1);
       const ke = 1 - Math.exp(-dt / 320), kt = 1 - Math.exp(-dt / 500);
       P.anchor[0] = lerp(P.anchor[0], P.tAnchor[0], ke); P.anchor[1] = lerp(P.anchor[1], P.tAnchor[1], ke);
@@ -1419,15 +1433,15 @@ void main(){
       gl.uniform3fv(U.uTrail, trail);
       if (P.dim > 0.004) gl.drawArrays(gl.POINTS, 0, drawN);
       window.__bt.frames++;
-      // slow device: first drop to 1x pixels, then draw fewer (slightly bigger) particles, down to 40%
-      ema = ema * 0.9 + dt * 0.1;
-      if (ema > 30 && document.visibilityState === "visible" && (P.dpr > 1 || drawN > N * 0.42)) {
-        if (++slowFrames > 45) {
-          if (P.dpr > 1) { P.dprCap = 1; resize(); }
-          else { drawN = Math.max(Math.round(N * 0.4), Math.round(drawN * 0.72)); P.sizeK = Math.pow(N / drawN, 0.3); }
-          window.__bt.quality = [P.dpr, drawN]; slowFrames = 0; ema = 16;
+      // judged on the middle frame of each 0.7 s, so a slower device is caught just as fast and one hitch doesn't count
+      if (level < 3 && now > sampleFrom && raw < 1000 && document.visibilityState === "visible") {
+        win.push(raw);
+        if (now - sampleFrom > 700 && win.length >= 4) {
+          win.sort((a, b) => a - b);
+          if (win[win.length >> 1] > 30) setLevel(level + 1);
+          win.length = 0; sampleFrom = now + 250;
         }
-      } else slowFrames = 0;
+      }
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
@@ -1709,7 +1723,8 @@ void main(){
   }
   const onScroll = () => { scrollNow = window.scrollY; if (!ticking) { ticking = true; requestAnimationFrame(update); setTimeout(() => { if (ticking) update(); }, 120); } };
   window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", () => { secDirty = true; onScroll(); if (scene === "route") layoutStops(); });
+  let secW = innerWidth;
+  window.addEventListener("resize", () => { if (innerWidth !== secW || !window.ResizeObserver) { secW = innerWidth; secDirty = true; } onScroll(); if (scene === "route") layoutStops(); });
   if (window.ResizeObserver) new ResizeObserver(() => { secDirty = true; onScroll(); }).observe(document.body);
 
   // ---- scramble headings when they enter
@@ -1996,7 +2011,7 @@ void main(){
     const col = () => (html.dataset.mode === "dark" ? [232, 51, 107] : [128, 20, 62]);
     window.addEventListener("scroll", () => { dyAcc += window.scrollY - sy; sy = window.scrollY; }, { passive: true });
     window.addEventListener("pointermove", (e) => {
-      if (state.view !== "site" || !$("draw-layer").hidden) { lx = null; return; }
+      if (state.view !== "site" || html.dataset.perf === "low" || !$("draw-layer").hidden) { lx = null; return; }
       const now = performance.now(), x = e.clientX, y = e.clientY;
       if (lx !== null) {
         const d = Math.hypot(x - lx, y - ly), v = d / Math.max(8, now - lt), [r, g, b] = col();
@@ -2015,7 +2030,7 @@ void main(){
     new MutationObserver(() => ctx.clearRect(0, 0, W, H)).observe(html, { attributes: true, attributeFilter: ["data-mode"] });
     const loop = (now) => {
       const dt = Math.min(50, now - (last || now)); last = now;
-      if (state.view !== "site") { if (!clean) { ctx.clearRect(0, 0, W, H); drips.length = 0; clean = true; cv.style.visibility = "hidden"; } requestAnimationFrame(loop); return; }
+      if (state.view !== "site" || html.dataset.perf === "low") { if (!clean) { ctx.clearRect(0, 0, W, H); drips.length = 0; clean = true; cv.style.visibility = "hidden"; } requestAnimationFrame(loop); return; }
       if (clean || (!drips.length && now - inkT > 9000)) { if (!clean) { ctx.clearRect(0, 0, W, H); clean = true; cv.style.visibility = "hidden"; } dyAcc = 0; requestAnimationFrame(loop); return; }
       if (dyAcc) { ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = "copy"; ctx.drawImage(cv, 0, -dyAcc * dpr); ctx.restore(); dyAcc = 0; }
       fadeAcc += dt;
