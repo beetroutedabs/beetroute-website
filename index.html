@@ -116,7 +116,7 @@ a { color: inherit; }
 /* ---------- nav ---------- */
 .nav-wrap { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; right: 0; z-index: 40; padding-block: 18px; transition: padding .4s var(--ease), background .4s; }
 .nav-wrap.scrolled { padding-block: 12px; background: color-mix(in srgb, var(--bg) 70%, transparent); }
-html[data-mode="dark"] .nav-wrap.scrolled { background: color-mix(in srgb, var(--void) 70%, transparent); }
+html[data-mode="dark"] .nav-wrap.scrolled { background: var(--void); }
 .nav { display: flex; align-items: center; gap: 28px; }
 .nav .links { display: flex; gap: 28px; margin-left: auto; }
 .nav .links a { font: 500 12px var(--mono); letter-spacing: .16em; text-transform: uppercase; text-decoration: none; color: var(--muted); transition: color .25s; }
@@ -266,6 +266,8 @@ html[data-route="road"] .stop:not(.side) { width: 230px; }
 .thanks h3 { margin: 0; font: 750 clamp(30px, 3.6vw, 44px)/1.05 var(--display); }
 .thanks p { margin: 0; color: var(--muted); }
 .row-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.btn[disabled] { opacity: .6; cursor: progress; }
+.leave { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .status { margin: 0; min-height: 1.5em; color: var(--accent); font-weight: 500; }
 .addr { color: var(--fg); font-weight: 600; user-select: all; }
 details.plain-text summary { cursor: pointer; font: 500 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
@@ -485,8 +487,8 @@ h2.sub { margin: 52px 0 16px; font: 750 36px/1 var(--display); }
   body .hero .h, body .hero .rise { opacity: 1; transform: none; }
 }
 /* no live blur over the moving particles (it re-renders every frame), slightly more solid surfaces instead */
-.nav-wrap.scrolled { background: color-mix(in srgb, var(--bg) 93%, transparent); }
-.top-wrap { background: color-mix(in srgb, var(--void) 93%, transparent); }
+.nav-wrap.scrolled { background: var(--bg); }
+.top-wrap { background: var(--void); }
 .panel, .pill, .case:not(.case-open) { background: var(--panel-solid); }
 /* slow-device mode (set by the particle engine) */
 html[data-perf="low"] .play-name input { backdrop-filter: none; -webkit-backdrop-filter: none; }
@@ -698,10 +700,11 @@ html[data-perf="low"] .play-name input { backdrop-filter: none; -webkit-backdrop
             <div class="field"><label for="enq-budget">Your budget <span class="optional">(optional)</span></label>
               <input id="enq-budget" name="budget" autocomplete="off" placeholder="A rough figure in ₹, or not sure yet"><span class="bar"></span></div>
             <div class="field"><label for="enq-message">Message</label><textarea id="enq-message" name="message" rows="3" placeholder="A little about your business and what you'd like to change"></textarea><span class="bar"></span></div>
+            <div class="leave" aria-hidden="true"><label>Leave this empty <input id="enq-leave" name="leave" tabindex="-1" autocomplete="off"></label></div>
             <p class="error" id="enq-error" role="alert"></p>
             <div class="form-foot">
               <button type="submit" class="btn primary">Send my enquiry <span class="arrow" aria-hidden="true">→</span></button>
-              <span class="small">It opens in your email app, ready to send.</span>
+              <span class="small" id="enq-note" role="status">It comes straight to our inbox, and we reply to your email.</span>
             </div>
           </form>
           <div class="thanks" id="enquiry-thanks" hidden></div>
@@ -2143,6 +2146,16 @@ void main(){
   function words(h, text) { text.split(" ").forEach((w, i) => { if (i) h.append(" "); const s = el("span", "w", w); s.style.setProperty("--i", i); h.append(s); }); }
   const today = () => new Date().toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
   const downloads = (async () => { try { return window.claude && typeof window.claude.use === "function" ? await window.claude.use("downloads") : null; } catch { return null; } })();
+  // Forms send straight to the studio's inbox through a small script on its own Google account. The email route below is the way back if that fails.
+  const SEND_URL = "https://script.google.com/macros/s/AKfycbx5q2HFHIzWdT0XLVxxDulUj3eMDB75ZXoq3l5ifMTwmjWi-mrDGJv2cjRuYg6LagJdOw/exec";
+  async function sendDirect(payload) {
+    if (!SEND_URL) return false;
+    const stop = new AbortController(), timer = setTimeout(() => stop.abort(), 25000);
+    try {
+      const r = await fetch(SEND_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload), credentials: "omit", redirect: "follow", signal: stop.signal });
+      return (await r.json()).ok === true;
+    } catch { return false; } finally { clearTimeout(timer); }
+  }
   // Send opens the visitor's own email app with everything written in. Very long answers go on the clipboard instead, since some mail apps cut long links short.
   const MAIL_MAX = 6000;
   function handback(container, { textFn, filenameFn, copyLabel, downloadLabel, mailLabel, subjectFn }) {
@@ -2241,26 +2254,53 @@ void main(){
   enqFields.forEach((f) => { const input = $("enq-" + f); input.addEventListener("input", () => { state.enquiry[f] = input.value; saveDraft(); grow(input); }); input.addEventListener("change", () => { state.enquiry[f] = input.value; saveDraft(); }); });
   function fillEnquiry() { enqFields.forEach((f) => { const input = $("enq-" + f); input.value = state.enquiry[f] || ""; grow(input); }); needButtons.forEach((b, i) => b.setAttribute("aria-pressed", String((state.enquiry.need || []).includes(ENQUIRY_NEEDS[i])))); }
   function enquiryText() { const q = state.enquiry; return ["BEETROUTE · Enquiry", `Date: ${today()}`, "", `Name: ${(q.name || "").trim()}`, `Email: ${(q.email || "").trim()}`, `Business: ${(q.business || "").trim() || "Not given"}`, `Looking for: ${(q.need || []).join(", ") || "Not given"}`, `Budget: ${(q.budget || "").trim() || "Not given"}`, "", "Message:", (q.message || "").trim()].join("\n"); }
-  form.addEventListener("submit", (e) => {
+  const enquirySubject = () => { const q = state.enquiry; return "Enquiry from " + ((q.name || "").trim() || "the website") + ((q.business || "").trim() ? " · " + q.business.trim() : ""); };
+  let enqSending = false;
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    if (enqSending) return;
     const q = state.enquiry; let bad = null;
     if (!(q.name || "").trim()) bad = ["Please add your name.", "enq-name"];
     else if (!(q.email || "").trim()) bad = ["Please add your email so we can reply.", "enq-email"];
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(q.email.trim())) bad = ["That email address doesn't look right. Check it and try again.", "enq-email"];
     else if (!(q.message || "").trim()) bad = ["Please add a short message.", "enq-message"];
     if (bad) { enqErr.textContent = bad[0]; enqErr.classList.remove("show"); void enqErr.offsetWidth; enqErr.classList.add("show"); $(bad[1]).focus(); return; }
-    enqErr.textContent = ""; showThanks();
-    // the submit tap opens the email app straight away; the Send button stays for a second try
-    const mail = thanks.querySelector(".send-mail"); if (mail) mail.click();
+    enqErr.textContent = "";
+    if (!SEND_URL) {
+      showThanks();
+      // the submit tap opens the email app straight away; the Send button stays for a second try
+      const mail = thanks.querySelector(".send-mail"); if (mail) mail.click();
+      return;
+    }
+    const btn = form.querySelector("button[type=submit]"), note = $("enq-note"), label = btn.innerHTML, said = note.textContent;
+    enqSending = true; btn.disabled = true; btn.textContent = "Sending…"; note.textContent = "Sending your enquiry…";
+    const ok = await sendDirect({ kind: "enquiry", email: q.email.trim(), subject: enquirySubject(), text: enquiryText(), leave: $("enq-leave").value });
+    enqSending = false; btn.disabled = false; btn.innerHTML = label; note.textContent = said;
+    if (ok) showSent(); else showThanks(true);
   });
-  function showThanks() {
+  function showSent() {
+    const q = state.enquiry, first = ((q.name || "").trim().split(/\s+/)[0]) || "", to = (q.email || "").trim();
+    thanks.textContent = "";
+    const pin = document.createElementNS("http://www.w3.org/2000/svg", "svg"); pin.setAttribute("viewBox", "0 0 100 116"); pin.setAttribute("class", "landing"); pin.setAttribute("aria-hidden", "true"); pin.innerHTML = '<use href="#mark"/>';
+    const h = el("h3", null, `Thank you${first ? ", " + first : ""}. Your enquiry is with us.`); h.tabIndex = -1;
+    const p = el("p"); p.append("We'll reply to "); p.append(el("span", "addr", to)); p.append(". There's nothing else you need to do.");
+    const more = el("div", "row-actions");
+    const start = el("button", "btn", "Start the Project Starter too"); start.type = "button"; start.setAttribute("data-open-flow", "");
+    const another = el("button", "btn quiet", "Send another"); another.type = "button"; another.addEventListener("click", () => { thanks.hidden = true; form.hidden = false; $("enq-message").focus(); });
+    more.append(start, another); thanks.append(pin, h, p, more);
+    q.message = ""; fillEnquiry(); saveDraft();
+    form.hidden = true; thanks.hidden = false;
+    if (field) field.burst();
+    h.focus({ preventScroll: true });
+  }
+  function showThanks(failed) {
     thanks.textContent = "";
     const pin = document.createElementNS("http://www.w3.org/2000/svg", "svg"); pin.setAttribute("viewBox", "0 0 100 116"); pin.setAttribute("class", "landing"); pin.setAttribute("aria-hidden", "true"); pin.innerHTML = '<use href="#mark"/>';
     const first = ((state.enquiry.name || "").trim().split(/\s+/)[0]) || "";
-    const h = el("h3", null, `Thank you${first ? ", " + first : ""}. Your enquiry is ready to send.`);
-    const p = el("p"); p.append("Your email app opens with it all written in, addressed to "); if (RETURN_EMAIL) p.append(el("span", "addr", RETURN_EMAIL)); else p.append(WHO); p.append(". Press send there and it's with us. If it didn't open, tap Send by email again, or copy it instead.");
+    const h = el("h3", null, failed ? `${first ? first + ", one" : "One"} more step, please.` : `Thank you${first ? ", " + first : ""}. Your enquiry is ready to send.`);
+    const p = el("p"); if (failed) p.append("We couldn't send it from here, so it hasn't reached us yet. Tap Send by email and your email app opens with it all written in, addressed to "); else p.append("Your email app opens with it all written in, addressed to "); if (RETURN_EMAIL) p.append(el("span", "addr", RETURN_EMAIL)); else p.append(WHO); p.append(failed ? ". Press send there and it's with us. You can also copy it instead." : ". Press send there and it's with us. If it didn't open, tap Send by email again, or copy it instead.");
     thanks.append(pin, h, p);
-    handback(thanks, { textFn: enquiryText, filenameFn: () => `BEETROUTE enquiry - ${safeName(state.enquiry.name, "enquiry")}.txt`, copyLabel: "Copy my enquiry", downloadLabel: "Download my enquiry", mailLabel: "Send by email", subjectFn: () => { const q = state.enquiry; return "Enquiry from " + ((q.name || "").trim() || "the website") + ((q.business || "").trim() ? " · " + q.business.trim() : ""); } });
+    handback(thanks, { textFn: enquiryText, filenameFn: () => `BEETROUTE enquiry - ${safeName(state.enquiry.name, "enquiry")}.txt`, copyLabel: "Copy my enquiry", downloadLabel: "Download my enquiry", mailLabel: "Send by email", subjectFn: enquirySubject });
     const more = el("div", "row-actions");
     const edit = el("button", "btn quiet", "Edit my enquiry"); edit.type = "button"; edit.addEventListener("click", () => { thanks.hidden = true; form.hidden = false; $("enq-name").focus(); });
     const start = el("button", "btn", "Start the Project Starter too"); start.type = "button"; start.setAttribute("data-open-flow", "");
@@ -2357,9 +2397,29 @@ void main(){
     const first = (((state.answers.details || {}).name || "").trim().split(/\s+/)[0]) || "";
     const h = el("h1", "q"); words(h, `Thank you${first ? ", " + first : ""}. Your answers are ready to send.`); s.append(h);
     const send = el("div", "send"); const intro = el("p", "who");
-    intro.append("Tap Send to open your email app with your answers written in, addressed to "); if (RETURN_EMAIL) intro.append(el("span", "addr", RETURN_EMAIL)); else intro.append(WHO); intro.append(". Then press send there. You can also copy them instead.");
-    send.append(intro);
-    handback(send, { textFn: plainText, filenameFn: () => `BEETROUTE Project Starter - ${safeName(state.answers.business, "answers")}.txt`, copyLabel: "Copy my answers", downloadLabel: "Download my answers", mailLabel: "Send my answers", subjectFn: () => "Project Starter · " + ((state.answers.business || "").trim() || (((state.answers.details || {}).name) || "").trim() || "my answers") });
+    const starterSubject = () => "Project Starter · " + ((state.answers.business || "").trim() || (((state.answers.details || {}).name) || "").trim() || "my answers");
+    const emailRoute = (failed) => {
+      send.textContent = ""; intro.textContent = "";
+      if (failed) intro.append("We couldn't send them from here, so they haven't reached us yet. Tap Send to open your email app with your answers written in, addressed to "); else intro.append("Tap Send to open your email app with your answers written in, addressed to ");
+      if (RETURN_EMAIL) intro.append(el("span", "addr", RETURN_EMAIL)); else intro.append(WHO); intro.append(". Then press send there. You can also copy them instead.");
+      send.append(intro);
+      handback(send, { textFn: plainText, filenameFn: () => `BEETROUTE Project Starter - ${safeName(state.answers.business, "answers")}.txt`, copyLabel: "Copy my answers", downloadLabel: "Download my answers", mailLabel: "Send my answers", subjectFn: starterSubject });
+    };
+    if (!SEND_URL) emailRoute(false);
+    else {
+      const to = (((state.answers.details || {}).email) || "").trim();
+      intro.append("Tap Send and your answers come straight to our inbox. We'll reply to " + (to || "the email you gave us") + ".");
+      const go = el("button", "btn primary", "Send my answers "); go.type = "button"; const ar = el("span", "arrow", "→"); ar.setAttribute("aria-hidden", "true"); go.append(ar);
+      const status = el("p", "status"); status.setAttribute("role", "status");
+      go.addEventListener("click", async () => {
+        go.disabled = true; status.textContent = "Sending your answers…";
+        const ok = await sendDirect({ kind: "starter", email: to, subject: starterSubject(), text: plainText(), leave: "" });
+        if (!ok) return emailRoute(true);
+        send.textContent = ""; intro.textContent = "Sent. Your answers are with us, and we'll reply to " + to + "."; send.append(intro);
+        h.textContent = `Thank you${first ? ", " + first : ""}. Your answers are with us.`;
+      });
+      send.append(intro, go, status);
+    }
     s.append(send, el("h2", "sub", "Your answers"));
     const ol = el("ol", "review");
     QUESTIONS.forEach((q, i) => { const li = el("li"); li.style.setProperty("--i", i); li.append(el("span", "n", String(i + 1).padStart(2, "0")), el("span", "rq", q.label)); const t = answerText(q); li.append(el("span", "ra" + (t ? "" : " empty"), t || "No answer")); const e = el("button", "btn quiet edit", "Edit"); e.type = "button"; e.setAttribute("aria-label", `Edit question ${i + 1}: ${q.label}`); e.addEventListener("click", () => { state.returnToSummary = true; go(i, -1); }); li.append(e); ol.append(li); });
