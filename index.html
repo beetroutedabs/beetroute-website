@@ -168,7 +168,7 @@ body.ready .hero .rise { opacity: 1; transform: none; transition: opacity 1s var
 .services .stick { align-content: center; }
 .svc-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 32px; align-items: center; }
 .svc-panel { position: relative; min-height: 430px; }
-.svc-nav span { margin-left: 14px; color: var(--muted); transition: color .3s; }
+.svc-nav span { display: inline-block; margin-left: 14px; color: var(--muted); transition: color .3s; }
 .svc-nav span.on { color: var(--fg); }
 .svc-item .svc-k { margin-top: 10px; font-size: 12px; color: var(--label); }
 .svc-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; max-width: 520px; }
@@ -403,8 +403,9 @@ html[data-mode="dark"] #juice { mix-blend-mode: screen; }
 @keyframes pillin { from { opacity: 0; scale: .5; } }
 .faq-right { display: grid; gap: 20px; }
 .faq-space { position: relative; height: clamp(180px, 21vw, 290px); }
-.faq-space::after { content: ""; position: absolute; left: 50%; top: 50%; width: min(100%, 290px); aspect-ratio: 1; translate: -50% -50%; border: 1.5px dashed var(--accent); border-radius: 50%; opacity: 0; scale: .85; transition: opacity .25s var(--ease), scale .25s var(--ease); animation: faqspin 10s linear infinite; }
-.faq-space.hot::after { opacity: .9; scale: 1; }
+.faq-space::after { content: ""; position: absolute; left: 50%; top: 50%; width: min(100%, 290px); aspect-ratio: 1; translate: -50% -50%; border: 1.5px dashed var(--accent); border-radius: 50%; opacity: 0; scale: .85; transition: opacity .25s var(--ease), scale .25s var(--ease); }
+.faq-sec { overflow-x: clip; }
+.faq-space.hot::after { opacity: .9; scale: 1; animation: faqspin 10s linear infinite; }
 @keyframes faqspin { to { rotate: 360deg; } }
 .faq-card { min-height: 200px; padding: clamp(20px, 2.4vw, 28px); border: 1px solid var(--line); background: var(--panel); border-radius: 10px; display: grid; gap: 10px; align-content: start; }
 .faq-card h3 { margin: 0; font: 750 clamp(22px, 2.2vw, 30px)/1.1 var(--display); letter-spacing: -.02em; }
@@ -433,21 +434,21 @@ html[data-mode="dark"] #juice { mix-blend-mode: screen; }
 .prog { max-width: 1120px; margin: 14px auto 0; height: 1px; background: var(--line); position: relative; }
 .prog i { position: absolute; left: 0; top: -1px; height: 3px; width: 0; background: var(--accent); transition: width .7s var(--ease); }
 .stage { display: grid; max-width: 860px; margin: 0 auto; padding-block: clamp(28px, 8vh, 80px) 90px; }
-.screen { grid-area: 1 / 1; min-width: 0; transition: opacity .45s var(--ease), transform .6s var(--ease); }
+.screen { grid-area: 1 / 1; min-width: 0; transition: opacity .28s var(--ease), transform .38s var(--ease); }
 .screen.is-below { opacity: 0; transform: translateY(48px); }
 .screen.is-above { opacity: 0; transform: translateY(-48px); }
 .screen.is-leaving { pointer-events: none; }
 .eyebrow { margin: 0 0 16px; font: 500 12px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--label); }
 .q { margin: 0; font: 750 clamp(36px, 5.4vw, 64px)/1.02 var(--display); text-wrap: balance; }
-.q .w { display: inline-block; animation: rise .7s var(--ease) both; animation-delay: calc(var(--i) * 45ms + 120ms); }
+.q .w { display: inline-block; animation: rise .45s var(--ease) both; animation-delay: calc(var(--i) * 22ms + 60ms); }
 @keyframes rise { from { opacity: 0; transform: translateY(.45em); } }
 .req { font: 500 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); vertical-align: middle; margin-left: 12px; border: 1px solid var(--line); border-radius: 999px; padding: 4px 8px; }
 .hint { margin: 14px 0 0; color: var(--muted); }
-.answer { margin-top: 34px; display: grid; gap: 22px; animation: fadein .6s var(--ease) .25s both; }
+.answer { margin-top: 34px; display: grid; gap: 22px; animation: fadein .4s var(--ease) .08s both; }
 .answer .field input, .answer .field textarea { font-size: clamp(21px, 3vw, 28px); }
 .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 24px; }
 .choices { display: grid; gap: 10px; max-width: 560px; }
-.choice { display: grid; grid-template-columns: 30px minmax(0, 1fr) 22px; align-items: center; gap: 14px; width: 100%; text-align: left; cursor: pointer; padding: 14px 16px; border-radius: 6px; background: var(--panel); border: 1px solid var(--line); transition: background .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease); animation: fadein .5s var(--ease) both; animation-delay: calc(var(--i) * 50ms + 280ms); }
+.choice { display: grid; grid-template-columns: 30px minmax(0, 1fr) 22px; align-items: center; gap: 14px; width: 100%; text-align: left; cursor: pointer; padding: 14px 16px; border-radius: 6px; background: var(--panel); border: 1px solid var(--line); transition: background .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease); animation: fadein .5s var(--ease) both; animation-delay: calc(var(--i) * 30ms + 100ms); }
 .choice:hover { border-color: var(--line-strong); }
 .choice:active { transform: scale(.985); }
 .choice .key { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 4px; font: 500 12px var(--mono); border: 1px solid var(--line-strong); color: var(--muted); transition: background .25s, color .25s, border-color .25s; }
@@ -458,7 +459,7 @@ html[data-mode="dark"] #juice { mix-blend-mode: screen; }
 .choice[aria-checked="true"] .key { background: var(--accent); color: var(--accent-fg); border-color: transparent; }
 .choice[aria-checked="true"] .tick path { stroke-dashoffset: 0; }
 .other-field { max-width: 560px; }
-.actions { margin-top: 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; animation: fadein .6s var(--ease) .4s both; }
+.actions { margin-top: 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; animation: fadein .4s var(--ease) .12s both; }
 .welcome { display: grid; gap: 18px; max-width: 620px; }
 .welcome .q { font-size: clamp(48px, 8vw, 104px); }
 .facts { margin: 6px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; color: var(--muted); }
@@ -470,7 +471,7 @@ html[data-mode="dark"] #juice { mix-blend-mode: screen; }
 .send p { margin: 0; }
 h2.sub { margin: 52px 0 16px; font: 750 36px/1 var(--display); }
 .review { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
-.review li { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 4px 12px; padding: 16px 0; border-bottom: 1px solid var(--line); animation: fadein .5s var(--ease) both; animation-delay: calc(var(--i) * 35ms + 200ms); }
+.review li { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 4px 12px; padding: 16px 0; border-bottom: 1px solid var(--line); animation: fadein .5s var(--ease) both; animation-delay: calc(var(--i) * 15ms + 60ms); }
 .review .n { grid-row: 1 / span 2; font: 500 12px var(--mono); color: var(--label); padding-top: 3px; }
 .review .rq { font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .review .ra { grid-column: 2; white-space: pre-wrap; overflow-wrap: anywhere; }
@@ -479,6 +480,13 @@ h2.sub { margin: 52px 0 16px; font: 750 36px/1 var(--display); }
 .next { margin: 0; padding: 0 0 0 22px; display: grid; gap: 8px; color: var(--muted); }
 .next li::marker { color: var(--accent); font-family: var(--mono); }
 .footnote { margin-top: 40px; font-size: 14px; color: var(--muted); }
+#field { transition: opacity .3s; }
+@media (max-width: 860px) { html[data-flow="summary"] #field { opacity: 0; } }
+@media (max-height: 560px) { html[data-flow] #field { opacity: 0; } }
+@media (max-width: 860px), (pointer: coarse) {
+  .foot-row nav a, .foot-bottom a { position: relative; }
+  .foot-row nav a::after, .foot-bottom a::after { content: ""; position: absolute; inset: -14px -8px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; animation-delay: 0ms !important; transition-duration: .01ms !important; transition-delay: 0ms !important; }
@@ -2150,11 +2158,18 @@ void main(){
   const SEND_URL = "https://script.google.com/macros/s/AKfycbx5q2HFHIzWdT0XLVxxDulUj3eMDB75ZXoq3l5ifMTwmjWi-mrDGJv2cjRuYg6LagJdOw/exec";
   async function sendDirect(payload) {
     if (!SEND_URL) return false;
-    const stop = new AbortController(), timer = setTimeout(() => stop.abort(), 25000);
-    try {
-      const r = await fetch(SEND_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload), credentials: "omit", redirect: "follow", signal: stop.signal });
-      return (await r.json()).ok === true;
-    } catch { return false; } finally { clearTimeout(timer); }
+    // a dropped connection gets one more try; a timeout or a refusal goes straight to the email route, and a rare double email beats a lost enquiry
+    for (let tries = 0; tries < 2; tries++) {
+      const stop = new AbortController(), timer = setTimeout(() => stop.abort(), 25000);
+      try {
+        const r = await fetch(SEND_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload), credentials: "omit", redirect: "follow", signal: stop.signal });
+        return (await r.json()).ok === true;
+      } catch (e) {
+        if (tries || e.name !== "TypeError") return false;
+        await new Promise((go) => setTimeout(go, 1500));
+      } finally { clearTimeout(timer); }
+    }
+    return false;
   }
   // Send opens the visitor's own email app with everything written in. Very long answers go on the clipboard instead, since some mail apps cut long links short.
   const MAIL_MAX = 6000;
@@ -2204,9 +2219,22 @@ void main(){
   const safeName = (s, fallback) => ((s || "").trim() || fallback).replace(/[^\w .,&-]+/g, "").slice(0, 60).trim() || fallback;
 
   // ============================================================ views
+  let flowEntry = false, ignorePop = false, returnY = 0;
+  function setRestore(v) { try { history.scrollRestoration = v; } catch {} }
+  function armBack() { try { history.pushState({ flow: true }, ""); flowEntry = true; } catch {} }
+  window.addEventListener("popstate", () => {
+    if (ignorePop) { ignorePop = false; setRestore("auto"); return; }
+    if (state.view !== "flow") return;
+    flowEntry = false;
+    if (!state.sent && state.step !== WELCOME) { armBack(); go(state.returnToSummary ? SUMMARY : state.step - 1, -1); return; }
+    closeFlow(); setRestore("auto");
+  });
   function openFlow() {
     if (state.view === "flow") return;
-    state.view = "flow";
+    state.view = "flow"; returnY = window.scrollY;
+    setRestore("manual"); armBack();
+    // a sent questionnaire is finished: opening it again starts clean
+    if (state.sent) { state.sent = false; state.answers = {}; state.returnToSummary = false; state.resumeStep = 0; state.step = WELCOME; const s = build(WELCOME); current.replaceWith(s); current = s; setCount(); }
     site.hidden = true; flow.hidden = false;
     flow.classList.remove("view-enter"); void flow.offsetWidth; if (!reduce) flow.classList.add("view-enter");
     window.scrollTo(0, 0);
@@ -2214,14 +2242,16 @@ void main(){
     const start = current.querySelector("#start"); if (start) start.focus({ preventScroll: true });
   }
   function closeFlow(target) {
-    state.view = "site";
+    state.view = "site"; delete html.dataset.flow;
     flow.hidden = true; site.hidden = false;
     site.classList.remove("view-enter"); void site.offsetWidth; if (!reduce) site.classList.add("view-enter");
     scene = "";
-    if (target) scrollToId(target, false); else window.scrollTo(0, 0);
+    if (target) scrollToId(target, false); else window.scrollTo(0, returnY);
     onScroll();
+    if (flowEntry) { flowEntry = false; ignorePop = true; try { history.back(); } catch { ignorePop = false; } }
   }
   function flowScene() {
+    html.dataset.flow = state.step === SUMMARY ? "summary" : "question";
     if (state.step === SUMMARY) applyScene("flowpin");
     else if (state.step === WELCOME) applyScene("flowwelcome");
     else applyScene("flow", { shape: "num:" + String(state.step + 1).padStart(2, "0") });
@@ -2371,7 +2401,7 @@ void main(){
       const sync = () => { buttons.forEach((b, oi) => b.setAttribute("aria-checked", String(isOn(q.options[oi])))); if (otherWrap) otherWrap.hidden = !isOn(q.other); };
       const pick = (o) => {
         if (multi) { const set = state.answers[q.id].selected; const at = set.indexOf(o); if (at >= 0) set.splice(at, 1); else set.push(o); sync(); saveDraft(); if (o === q.other && otherWrap && !otherWrap.hidden) setTimeout(() => otherWrap.querySelector("input").focus(), 30); }
-        else { state.answers[q.id] = o; sync(); saveDraft(); setTimeout(() => { if (current === s) next(); }, reduce ? 0 : 420); }
+        else { state.answers[q.id] = o; sync(); saveDraft(); setTimeout(() => { if (current === s) next(); }, reduce ? 0 : 260); }
       };
       s._pick = (letter) => { const oi = LETTERS.indexOf(letter); if (oi >= 0 && oi < q.options.length) { buttons[oi].focus(); pick(q.options[oi]); } };
       s._pickFocused = (b) => { const oi = buttons.indexOf(b); if (oi >= 0) pick(q.options[oi]); };
@@ -2417,6 +2447,10 @@ void main(){
         if (!ok) return emailRoute(true);
         send.textContent = ""; intro.textContent = "Sent. Your answers are with us, and we'll reply to " + to + "."; send.append(intro);
         h.textContent = `Thank you${first ? ", " + first : ""}. Your answers are with us.`;
+        state.sent = true; clearTimeout(saveTimer); store.del(STORE_KEY);
+        s.querySelectorAll(".edit").forEach((b) => b.remove());
+        next.firstElementChild.remove();
+        s.querySelector(".footnote").remove();
       });
       send.append(intro, go, status);
     }
@@ -2427,7 +2461,7 @@ void main(){
     const next = el("ol", "next"); NEXT_STEPS.forEach((t) => next.append(el("li", null, t))); s.append(next);
     const row = el("div", "row-actions"); row.style.marginTop = "36px";
     const home = el("button", "btn", "Back to the website"); home.type = "button"; home.setAttribute("data-close-flow", "");
-    const again = el("button", "btn quiet", "Start a new questionnaire"); again.type = "button"; again.addEventListener("click", () => { state.answers = {}; state.returnToSummary = false; store.del(STORE_KEY); go(0, 1); });
+    const again = el("button", "btn quiet", "Start a new questionnaire"); again.type = "button"; again.addEventListener("click", () => { state.answers = {}; state.sent = false; state.returnToSummary = false; store.del(STORE_KEY); go(0, 1); });
     row.append(home, again); s.append(row, el("p", "footnote", "Your answers stay on this device until you send them."));
     return s;
   }
@@ -2445,7 +2479,7 @@ void main(){
     if (reduce) { old.remove(); focusScreen(fresh); return; }
     busy = true; old.classList.add("is-leaving", dir >= 0 ? "is-above" : "is-below"); void fresh.offsetWidth;
     requestAnimationFrame(() => fresh.classList.remove("is-below", "is-above"));
-    setTimeout(() => { old.remove(); busy = false; focusScreen(fresh); }, 480);
+    setTimeout(() => { old.remove(); busy = false; focusScreen(fresh); }, 300);
   }
   function wireWelcome(s) {
     const draft = Object.keys(state.answers || {}).length > 0, start = s.querySelector("#start"), resume = s.querySelector("#resume");
